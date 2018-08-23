@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Countries Visited</title>
+
+    <style type="text/css">
+    </style>
+</head>
+
+<body>
+    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+    <script src="http://code.highcharts.com/mapdata/custom/world.js"></script>
+
+    <div id="container"></div>
+
+    <script type="text/javascript">
+
+        // Prepare demo data
+        // Data is joined to map using value of 'hc-key' property by default.
+        // See API docs for 'joinBy' for more info on linking data and map.
+        var data = [
+            ['fr', 10],
+            ['de', 1],
+            ['it', 2],
+            ['es', 6],
+            ['cl', 1],
+            ['mm', 1],
+            ['us', 1],
+            ['za', 1],
+            ['zm', 1],
+            ['zw', 1],
+            ['bw', 1],
+            ['gb', 100],
+            ['au', 10]
+        ];
+
+        // Create the chart
+        Highcharts.mapChart('container', {
+            chart: {
+                map: 'custom/world'
+            },
+
+            title: {
+                text: 'Countries Visited'
+            },
+
+            mapNavigation: {
+                enabled: true,
+                buttonOptions: {
+                    verticalAlign: 'bottom'
+                }
+            },
+
+            colorAxis: {
+                min: 0
+            },
+
+            series: [{
+                data: data,
+                name: 'Number of Visits',
+                states: {
+                    hover: {
+                        color: '#BADA55'
+                    }
+                },
+                dataLabels: {
+                    enabled: false,
+                    format: '{point.name}'
+                },
+                point: {
+                    events: {
+                        click: function () {
+
+                            window.open("https://photos.google.com/search/" + this.name);
+                            //alert(this.name);
+                        }
+                    }
+                }
+            }]
+        });
+
+    </script>
+</body>
+
+</html>
