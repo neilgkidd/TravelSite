@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <script>
+        var url = "https://spreadsheets.google.com/feeds/list/1DFihesrFHViTnLECc28kYbe6UCMWmbhESPZfvvEMq2M/od6/public/values?alt=json";
+        $.ajax({
+            url: url,
+            dataType: "jsonp",
+            success: function (data) {
+                // data.feed.entry is an array of objects that represent each cell
+                for (var i = 0; i < data.feed.entry.length; i++){
+
+                    //console.log(data.feed.entry[0]);
+                    console.log(data.feed.entry);
+                    console.log("country code: " + data.feed.entry[i]['gsx$countrycode']['$t']);
+                    console.log("country name: " + data.feed.entry[i]['gsx$countryname']['$t']);
+                    console.log("visits: " + data.feed.entry[i]['gsx$visits']['$t']);
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>
