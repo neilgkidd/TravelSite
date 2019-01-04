@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Highmaps Example</title>
+
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        #container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        .loading {
+            margin-top: 10em;
+            text-align: center;
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script src="http://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="http://code.highcharts.com/modules/data.js"></script>
+    <!-- <script src="highmaps/code/js/modules/exporting.js"></script>
+    <script src="highmaps/code/js/modules/offline-exporting.js"></script> -->
+    <script src="http://code.highcharts.com/mapdata/custom/world.js"></script>
+
+    <div id="container">
+        <div class="loading">
+            <i class="icon-spinner icon-spin icon-large"></i>
+            Loading data from Google Spreadsheets...
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        // Load the data from a Google Spreadsheet
+        //Jan 2019
+        //URL:
+        //https://docs.google.com/spreadsheets/d/e/2PACX-1vT97OKt-Lfw0oPXa-z-DyhS_GX3rXYYzkD9sIuwsxC1bs94lx0uYlrQFGjXYyz4NF9ZNqw7pLpG-oXD/pub?gid=0&single=true
+        //Sheet ID:
+        //1DFihesrFHViTnLECc28kYbe6UCMWmbhESPZfvvEMq2M
+        // Country ISO Codes from: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
+        Highcharts.data({
+            googleSpreadsheetKey: '1DFihesrFHViTnLECc28kYbe6UCMWmbhESPZfvvEMq2M',
+
+            // Custom handler when the spreadsheet is parsed
+            parsed: function (columns) {
+
+                // Read the columns into the data array
+                var data = [];
+                Highcharts.each(columns[0], function (code, i) {
+                    data.push({
+                        code: code.toUpperCase(),
+                        value: parseFloat(columns[2][i]),
+                        name: columns[1][i]
+                    });
+                });
+
+                // Initiate the chart
+                Highcharts.mapChart('container', {
+                    chart: {
+                        map: 'custom/world',
+                        borderWidth: 1
+                    },
+
+                    colors: ['rgba(19,64,117,0.05)', 'rgba(19,64,117,0.2)', 'rgba(19,64,117,0.4)',
+                        'rgba(19,64,117,0.5)', 'rgba(19,64,117,0.6)', 'rgba(19,64,117,0.8)', 'rgba(19,64,117,1)'],
+
+                    title: {
+                        text: 'Number of Visits'
+                    },
+
+                    mapNavigation: {
+                        enabled: true
+                    },
+
+                    legend: {
+                        title: {
+                            text: 'Visits',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                            }
+                        },
+                        align: 'left',
+                        verticalAlign: 'bottom',
+                        floating: true,
+                        layout: 'vertical',
+                        valueDecimals: 0,
+                        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
+                        symbolRadius: 0,
+                        symbolHeight: 14
+                    },
+
+                    colorAxis: {
+                        dataClasses: [{
+                            to: 1
+                        }, {
+                            from: 1,
+                            to: 3
+                        }, {
+                            from: 3,
+                            to: 6
+                        }, {
+                            from: 6,
+                            to: 10
+                        }, {
+                            from: 10
+                        }]
+                    },
+
+                    series: [{
+                        data: data,
+                        joinBy: ['iso-a3', 'code'],
+                        animation: true,
+                        name: 'Visits',
+                        states: {
+                            hover: {
+                                color: '#a4edba'
+                            }
+                        },
+                        shadow: false,
+                        point: {
+                            events: {
+                                click: function () {
+
+                                    window.open("https://photos.google.com/search/" + this.name);
+                                }
+                            }
+                        }
+                    }]
+                });
+            },
+            error: function () {
+                document.getElementById('container').innerHTML = '<div class="loading">' +
+                    '<i class="icon-frown icon-large"></i> ' +
+                    'Error loading data from Google Spreadsheets' +
+                    '</div>';
+            }
+        });
+
+    </script>
+</body>
+
+</html>
